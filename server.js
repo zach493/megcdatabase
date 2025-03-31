@@ -37,6 +37,23 @@ app.get('/api/equipment', async (req, res) => {
   }
 });
 
+// Add this endpoint to your existing Express.js server code
+app.get('/api/equipment', async (req, res) => {
+  try {
+    const query = 'SELECT equipment_name, site FROM equipment ORDER BY site ASC';
+    const [results] = await db.query(query);
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'No equipment found' });
+    }
+
+    res.status(200).json(results);
+  } catch (err) {
+    console.error('Error fetching equipment data:', err);
+    res.status(500).json({ message: 'Server error occurred while fetching equipment data.' });
+  }
+});
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
